@@ -54,6 +54,9 @@ COORD_OJBNAME = (670, 430)
 COORD_TYPE = (670, 450)
 COORD_SCOPE = (670, 475)
 
+OUTPUT_LOCAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{NAME}\")"
+OUTPUT_GLOBAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{PG_NAME}.{NAME}\")"
+
 time.sleep(2)
 
 
@@ -179,35 +182,38 @@ def page_name(pg_number):
     return pyperclip.paste()
 
 
-def main(first_page, last_page):
-    output_local = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{NAME}\")"
-    output_global = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID},\"{PG_NAME}.{NAME}\")"
+def output(c_name, pg_name, page_id):
+    """Lists the current component"""
+    if c_name == '121':
+        c_id = "0"
+        component_type = COMPONENT_TYPES['121']
+        prefix = COMPONENT_PREFIXES[component_type]
+        print(OUTPUT_LOCAL.format(TYPE=component_type,
+                                  PREFIX=prefix, NAME=pg_name,
+                                  PG_ID=page_id, C_ID=c_id))
+    else:
+        c_id = get_id()
+        component_type = COMPONENT_TYPES[get_type()]
+        prefix = COMPONENT_PREFIXES[component_type]
+        scope = get_scope()
+        if scope == "local":
+            print(OUTPUT_LOCAL.format(TYPE=component_type,
+                                      PREFIX=prefix, NAME=c_name,
+                                      PG_ID=page_id, C_ID=c_id))
+        elif scope == "global":
+            print(OUTPUT_GLOBAL.format(TYPE=component_type,
+                                       PREFIX=prefix, NAME=c_name,
+                                       PG_ID=page_id, C_ID=c_id,
+                                       PG_NAME=pg_name))
 
-    listed = []
 
-    time.sleep(1.2)  # to make there that it won't be a double click
-
-    for page_number in range(first_page, last_page+1):
-        pg_name = page_name(page_number)
+def main(first_page_id, last_page_id):
+    for page_id in range(first_page_id, last_page_id+1):
+        pg_name = page_name(page_id)
         print("\n/**\n * componentes for page {}\n */".format(pg_name))
-        page_id = page_number
         while some_component_selected():
             c_name = get_name()
-            if c_name == '121':
-                c_id = "0"
-                component_type = COMPONENT_TYPES['121']
-                prefix = COMPONENT_PREFIXES[component_type]
-                print(output_local.format(TYPE=component_type,
-                                          PREFIX=prefix, NAME=pg_name,
-                                          PG_ID=page_id, C_ID=c_id))
-            else:
-                c_id = get_id()
-                component_type = COMPONENT_TYPES[get_type()]
-                prefix = COMPONENT_PREFIXES[component_type]
-                scope = get_scope()
-                print(output_local.format(TYPE=component_type,
-                                          PREFIX=prefix, NAME=c_name,
-                                          PG_ID=page_id, C_ID=c_id))
+            output(c_name, pg_name, page_id)
             next_component()
 
 if __name__ == '__main__':
@@ -216,4 +222,5 @@ if __name__ == '__main__':
     if not nextion:
         raise Exception("Nextion Windows not found!")
     set_up(nextion)
+    time.sleep(1.2)  # to make sure that it won't be a double click
     main(0, 0)

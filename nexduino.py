@@ -183,12 +183,12 @@ def page_name(pg_number):
 
 
 def output(c_name, pg_name, page_id):
-    """Lists the current component"""
+    """Returns the delcaration string for the current component"""
     if c_name == '121':
         c_id = "0"
         component_type = COMPONENT_TYPES['121']
         prefix = COMPONENT_PREFIXES[component_type]
-        print(OUTPUT_LOCAL.format(TYPE=component_type,
+        return (OUTPUT_LOCAL.format(TYPE=component_type,
                                   PREFIX=prefix, NAME=pg_name,
                                   PG_ID=page_id, C_ID=c_id))
     else:
@@ -197,23 +197,24 @@ def output(c_name, pg_name, page_id):
         prefix = COMPONENT_PREFIXES[component_type]
         scope = get_scope()
         if scope == "local":
-            print(OUTPUT_LOCAL.format(TYPE=component_type,
-                                      PREFIX=prefix, NAME=c_name,
-                                      PG_ID=page_id, C_ID=c_id))
-        elif scope == "global":
-            print(OUTPUT_GLOBAL.format(TYPE=component_type,
+            return OUTPUT_LOCAL.format(TYPE=component_type,
                                        PREFIX=prefix, NAME=c_name,
-                                       PG_ID=page_id, C_ID=c_id,
-                                       PG_NAME=pg_name))
+                                       PG_ID=page_id, C_ID=c_id)
+        elif scope == "global":
+            return OUTPUT_GLOBAL.format(TYPE=component_type,
+                                        PREFIX=prefix, NAME=c_name,
+                                        PG_ID=page_id, C_ID=c_id,
+                                        PG_NAME=pg_name)
 
 
-def main(first_page_id, last_page_id):
+def _main(first_page_id, last_page_id):
+    """Lists the delcaration for each component in the page range"""
     for page_id in range(first_page_id, last_page_id+1):
         pg_name = page_name(page_id)
-        print("\n/**\n * componentes for page {}\n */".format(pg_name))
+        print("\n/**\n * components for page {}\n */".format(pg_name))
         while some_component_selected():
             c_name = get_name()
-            output(c_name, pg_name, page_id)
+            print(output(c_name, pg_name, page_id))
             next_component()
 
 if __name__ == '__main__':
@@ -223,4 +224,4 @@ if __name__ == '__main__':
         raise Exception("Nextion Windows not found!")
     set_up(nextion)
     time.sleep(1.2)  # to make sure that it won't be a double click
-    main(0, 0)
+    _main(0, 0)

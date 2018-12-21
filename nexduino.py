@@ -72,6 +72,9 @@ def home():
     """Selects first page"""
     pyautogui.moveTo(COORD_PAGE)
     pyautogui.click()
+    
+    # sends "up" key a lot of times to be sure it is on the first page
+    pyautogui.typewrite(['up']*30)
     pyautogui.moveTo(COORD_LIST_COMPONENTES)
     pyautogui.click()
     pyautogui.typewrite(['home'])

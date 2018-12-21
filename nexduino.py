@@ -1,4 +1,5 @@
 import time
+import re
 import pyperclip
 import pyautogui
 
@@ -56,6 +57,8 @@ COORD_SCOPE = (670, 475)
 
 OUTPUT_LOCAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{NAME}\")"
 OUTPUT_GLOBAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{PG_NAME}.{NAME}\")"
+
+re_default_names = re.compile(r"(page|t|g|n|b|j|p|q|m|z|s|h|tm|va|bt|c|r|qr)\d+")
 
 time.sleep(2)
 
@@ -217,7 +220,8 @@ def _main(first_page_id, last_page_id):
         print("\n/**\n * components for page {}\n */".format(pg_name))
         while some_component_selected():
             c_name = get_name()
-            print(output(c_name, pg_name, page_id))
+            if not re_default_names.match(c_name) and not c_name.startswith('_'):
+                print(output(c_name, pg_name, page_id))
             next_component()
 
 if __name__ == '__main__':

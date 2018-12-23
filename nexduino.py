@@ -55,8 +55,8 @@ COORD_OJBNAME = (670, 430)
 COORD_TYPE = (670, 450)
 COORD_SCOPE = (670, 475)
 
-OUTPUT_LOCAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{NAME}\")"
-OUTPUT_GLOBAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{PG_NAME}.{NAME}\")"
+OUTPUT_LOCAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{NAME}\");"
+OUTPUT_GLOBAL = "{TYPE} {PREFIX}_{NAME} = {TYPE}({PG_ID}, {C_ID}, \"{PG_NAME}.{NAME}\");"
 
 re_default_names = re.compile(r"(page|t|g|n|b|j|p|q|m|z|s|h|tm|va|bt|c|r|qr)\d+")
 

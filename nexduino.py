@@ -84,11 +84,12 @@ def home():
     pyautogui.typewrite(['enter'])
 
 
-def set_up(janela):
+def set_up(janela: pyautogui.Window):
     """Initial configuration"""
     janela.maximize()
-    janela.set_position(0, 0, 800, 600)
-    janela.set_foreground()
+    janela.resizeTo(800, 600)
+    janela.moveTo(0, 0)
+    janela.focus()
     reset_layout()
     home()
 
@@ -225,10 +226,10 @@ def _main(first_page_id, last_page_id):
             next_component()
 
 if __name__ == '__main__':
-    nextion = pyautogui.getWindow("Nextion Editor")
+    nextion = pyautogui.getWindowsWithTitle("Nextion Editor")[0]
 
     if not nextion:
         raise Exception("Nextion Windows not found!")
     set_up(nextion)
     time.sleep(1.2)  # to make sure that it won't be a double click
-    _main(0, 0)
+    _main(0, 5)
